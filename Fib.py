@@ -1,3 +1,9 @@
+from rcviz import CallGraph, viz
+
+cg = CallGraph(filename="2.pdf")
+dict = {}
+
+
 def fib(n):
     qwerty = [0, 1]
     if n == 0:
@@ -30,11 +36,17 @@ def fibLastNumber(n):
             cur = sum1
     return cur
 
+@viz(cg)
+def badFib(n):
+    return n if n <= 1 else badFib(n-1) + badFib(n-2)
 
-def main():
-    n = int(input())
-    print(fibLastNumber(n))
-
+@viz(cg)
+def badFibDict(n):
+    if n not in dict:
+        dict[n] = n if n <= 1 else badFibDict(n-1) + badFibDict(n-2)
+    return dict[n]   
 
 if __name__ == "__main__":
-    main()
+    n = int(input())
+    badFib(n)
+    cg.render()
