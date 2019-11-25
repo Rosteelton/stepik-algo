@@ -1,6 +1,6 @@
 from rcviz import CallGraph, viz
 
-cg = CallGraph(filename="2.pdf")
+cg = CallGraph(filename="8.pdf")
 dict = {}
 
 
@@ -36,17 +36,23 @@ def fibLastNumber(n):
             cur = sum1
     return cur
 
-@viz(cg)
 def badFib(n):
     return n if n <= 1 else badFib(n-1) + badFib(n-2)
 
-@viz(cg)
 def badFibDict(n):
     if n not in dict:
         dict[n] = n if n <= 1 else badFibDict(n-1) + badFibDict(n-2)
-    return dict[n]   
+    return dict[n]
+
+def decCache(f):
+    cache = {}
+    def inner(n):
+        if n not in cache:
+            cache[n] = f(n)
+        return cache[n]
+    return inner
 
 if __name__ == "__main__":
     n = int(input())
-    badFib(n)
-    cg.render()
+    result = decCache(badFib)(n)
+    print(result)
