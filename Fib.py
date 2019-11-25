@@ -1,4 +1,5 @@
 from rcviz import CallGraph, viz
+from functools import lru_cache
 
 cg = CallGraph(filename="8.pdf")
 dict = {}
@@ -54,5 +55,16 @@ def decCache(f):
 
 if __name__ == "__main__":
     n = int(input())
-    result = decCache(badFib)(n)
-    print(result)
+    badFib2 = badFib
+
+    badFib = lru_cache(maxsize=None)(badFib)
+    print(badFib(n))
+
+    badFib2 = decCache(badFib2)
+    print(badFib2(n))
+
+
+
+
+    # result2 = decCache(badFib)
+    # print(result2(n))
