@@ -12,6 +12,13 @@ def findPoints(sections):
                 newSections.append(item)
         return findPoints(newSections)
 
+def findPoints2(segments):
+    dots = [segments.pop(0)[1]]
+    for l, r in segments:
+        if l > dots[-1]:
+            dots.append(r)
+    return dots
+
 def contains(x, *tuple):
    return (x in range(tuple[0], tuple[1]))
 
@@ -25,9 +32,9 @@ if __name__ == '__main__':
 
     sections.sort(key= lambda x: x[1])
 
-    findPoints(sections)
+    dots = findPoints2(sections)
 
-    print(len(result))
-    print(" ".join(map(str, result)))
+    print(len(dots))
+    print(" ".join(map(str, dots)))
 
 
