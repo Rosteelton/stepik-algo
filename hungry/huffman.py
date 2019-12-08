@@ -73,18 +73,25 @@ def createFreqSortedTree(source):
                              right_values=xset(b.left_values).union(xset(b.right_values)).union(xset(b.value))))
     return treeList[0]
 
-
+dictCodes = {}
 def getSymbolCode(tree, symbol):
-    code = ""
-    while tree.isNotEmpty():
-        if symbol in tree.right_values:
-            tree = tree.right_subtree
-            code = code + '1'
-        elif symbol in tree.left_values:
-            tree = tree.left_subtree
-            code = code + '0'
-    return code
+    if symbol in dictCodes:
+        return dictCodes[symbol]
+    else:
+        code = ""
 
+        if tree.isEmpty():
+            code = "0"
+        else:
+            while tree.isNotEmpty():
+                if symbol in tree.right_values:
+                    tree = tree.right_subtree
+                    code = code + '1'
+                elif symbol in tree.left_values:
+                    tree = tree.left_subtree
+                    code = code + '0'
+        dictCodes[symbol] = code
+        return code
 
 def encode(tree, str):
     result = ""
@@ -116,8 +123,12 @@ if __name__ == '__main__':
     # [('q', 2), ('w', 2), ('e', 1), ('r', 1), ('t', 1), ('y', 1)]
     resultTree = createFreqSortedTree(l)
 
-    encoded = encode(resultTree, string)
-    decoded = decode(resultTree, encoded)
 
+    encoded = encode(resultTree, string)
+    # decoded = decode(resultTree, encoded)
+
+    print(len(dictCodes.values()), len(encoded))
+
+    for x in dictCodes:
+        print(x + ':', dictCodes[x])
     print(encoded)
-    print(decoded)
