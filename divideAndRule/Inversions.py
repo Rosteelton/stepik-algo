@@ -24,8 +24,6 @@ def merge(arr, temp_arr, l, m, r):
     j = m + 1 #right arr (to r)
     k = i #temp arr
 
-    print('merging {} with {}'.format(arr[l:m + 1], arr[m + 1: r + 1]))
-
     while i <= m and j <= r:
         if arr[i] <= arr[j]: # no inversions
             temp_arr[k] = arr[i]
@@ -50,8 +48,6 @@ def merge(arr, temp_arr, l, m, r):
     for s in range(l, r + 1):
         arr[s] = temp_arr[s]
 
-    print('new arr = {}'.format(arr))
-    print('count = {}', count)
     return count
 
 # return number of inversions
