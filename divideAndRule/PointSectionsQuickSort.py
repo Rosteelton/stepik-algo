@@ -15,7 +15,14 @@
 # Sample Output:
 #
 # 1 0 0
+
+# сортируем отрезки по началам (0), по концам (1)
+# затем идем по точкам (x) и считаем сколько x >= в 1 группе и вычитаем из получившегося сколько x > во 2 группе
+# юзать двоичный поиск!!! для нахождения (как bisect)
+
 import random
+import bisect
+from copy import deepcopy
 
 def partition_2(arr, l, r, reference, extracter):
     arr[l], arr[reference] = arr[reference], arr[l]
@@ -27,6 +34,7 @@ def partition_2(arr, l, r, reference, extracter):
             arr[j], arr[i] = arr[i], arr[j]
     arr[l], arr[j] = arr[j], arr[l]
     return j
+
 
 def partition_1(arr, l, r, reference, extracter):
     arr[l], arr[reference] = arr[reference], arr[l]
@@ -41,7 +49,9 @@ def partition_1(arr, l, r, reference, extracter):
 
 
 def partition(arr, l, r, extracter):
-    m1 = partition_1(arr, l, r, random.randint(l, r), extracter)
+    randomEl = random.choice([l, (l + r) // 2, r])
+
+    m1 = partition_1(arr, l, r, randomEl, extracter)
     m0 = partition_2(arr, l, m1, m1, extracter)
     return m0, m1
 
@@ -53,17 +63,38 @@ def quicksort_(arr, l, r, extracter):
     quicksort_(arr, l, m0 - 1, extracter)
     quicksort_(arr, m1 + 1, r, extracter)
 
+
 def quicksort(arr, extracter):
     quicksort_(arr, 0, len(arr) - 1, extracter)
 
-def contains(x, *tuple):
-   return (x in range(tuple[0], tuple[1]))
 
+# bad
+def find(points, sectionsLeft, sectionsRight):
+    dictionary = dict.fromkeys(points, 0)
 
+    for point in points:
 
-def find(points, sections):
- # ???
+        j = 0
+        while j < len(sectionsLeft) and point >= sectionsLeft[j][0]:
+            j += 1
 
+        k = 0
+        while k < len(sectionsRight) and point > sectionsRight[k][1]:
+            k += 1
+
+        dictionary[point] = j - k
+
+    return dictionary
+
+def bisectFind(points, sectionsLeft, sectionsRight):
+    dictionary = dict.fromkeys(points, 0)
+
+    for point in points:
+        j = bisect.bisect_right(sectionsLeft, point)
+        k = bisect.bisect_left(sectionsRight, point)
+        dictionary[point] = j - k
+
+    return dictionary
 
 def main():
     n, _ = map(int, input().split(" "))
@@ -73,12 +104,20 @@ def main():
         sections.append((x, y))
     points = list(map(int, input().split(" ")))
 
-    quicksort(points, lambda x: x)
-    print(points)
+    # [i[0] for i in a]
+    b = deepcopy(sections)
 
-    quicksort(sections, lambda x: x[1])
-    print(sections)
+    sectionsLeft = sorted([i[0] for i in sections])
+    sectionsRight = sorted([i[1] for i in b])
 
+    # print(sectionsLeft)
+    # print(sectionsRight)
+    # quicksort(sectionsLeft, lambda x: x[0])
+    # quicksort(sectionsRight, lambda x: x[1])
+
+    result = bisectFind(points, sectionsLeft, sectionsRight)
+
+    print(" ".join(str(value) for key, value in result.items()))
 
 if __name__ == '__main__':
     main()
