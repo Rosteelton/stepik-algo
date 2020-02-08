@@ -22,7 +22,6 @@
 
 import random
 import bisect
-from copy import deepcopy
 
 def partition_2(arr, l, r, reference, extracter):
     arr[l], arr[reference] = arr[reference], arr[l]
@@ -87,14 +86,11 @@ def find(points, sectionsLeft, sectionsRight):
     return dictionary
 
 def bisectFind(points, sectionsLeft, sectionsRight):
-    dictionary = dict.fromkeys(points, 0)
-
     for point in points:
         j = bisect.bisect_right(sectionsLeft, point)
         k = bisect.bisect_left(sectionsRight, point)
-        dictionary[point] = j - k
+        print(j - k, end=' ')
 
-    return dictionary
 
 def main():
     n, _ = map(int, input().split(" "))
@@ -104,20 +100,13 @@ def main():
         sections.append((x, y))
     points = list(map(int, input().split(" ")))
 
-    # [i[0] for i in a]
-    b = deepcopy(sections)
+    sectionsLeft = [i[0] for i in sections]
+    sectionsRight = [i[1] for i in sections]
 
-    sectionsLeft = sorted([i[0] for i in sections])
-    sectionsRight = sorted([i[1] for i in b])
+    quicksort(sectionsLeft, lambda x: x)
+    quicksort(sectionsRight, lambda x: x)
 
-    # print(sectionsLeft)
-    # print(sectionsRight)
-    # quicksort(sectionsLeft, lambda x: x[0])
-    # quicksort(sectionsRight, lambda x: x[1])
-
-    result = bisectFind(points, sectionsLeft, sectionsRight)
-
-    print(" ".join(str(value) for key, value in result.items()))
+    bisectFind(points, sectionsLeft, sectionsRight)
 
 if __name__ == '__main__':
     main()
