@@ -10,8 +10,19 @@
 # Sample Output 3:
 #
 # 3
-from functools import lru_cache
 
+# iterative
+# все время интересует 2 предыдущих
+def find3(arr):
+    bb = 0
+    before = arr[0]
+    sum = before
+    for i in range(1, len(arr)):
+        current = arr[i]
+        sum = max(bb + current, before + current)
+        bb = before
+        before = sum
+    return sum
 
 # noTailRec
 def find2(arr):
@@ -43,13 +54,16 @@ def test():
 
 def main():
 
-    # _ = input()
+    _ = input()
     arr = list(map(int, input().split(" ")))
 
     # result = find1(arr[:-1], arr[-1])
-    result = arr[-1] + find2(arr[:-1])
+    # result = arr[-1] + find2(arr[:-1])
+    result = find3(arr)
     print(result)
     # test()
+    # result = find3(arr)
+    # print(result)
 
 if __name__ == '__main__':
     main()
